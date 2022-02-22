@@ -16,7 +16,10 @@ options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
 def log(msg):
     print(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()), ":", msg)
-
+    f = open("log.txt", "a")
+    f.write(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()) + " : " + msg + "\n")
+    f.close()
+    
 def alarm(msg):
     log("Alarm -- " + msg)
     winsound.Beep(1000, 1000)
