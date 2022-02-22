@@ -1,4 +1,4 @@
 #!/bin/sh
 
-export webhook_url=https://hooks.slack.com/services/.......
+. setup.sh
 python3.8 passport_appointment.py > /dev/null &

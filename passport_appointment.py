@@ -29,7 +29,7 @@ def alarm(msg):
     log("Alarm -- " + msg)
 
     try:
-        slack_data = {'text': msg, 'username': "Passport apointment notifier", 'icon_emoji': ":bell:"}
+        slack_data = {'text': msg, 'username': "Passport appointment notifier", 'icon_emoji': ":bell:"}
         response = requests.post(os.environ.get('webhook_url'), data=json.dumps(slack_data), headers={'Content-Type': 'application/json'})
         if response.status_code != 200:
             raise ValueError(

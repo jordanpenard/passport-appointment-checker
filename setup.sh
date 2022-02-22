@@ -1,0 +1,3 @@
+#!/bin/sh
+
+export webhook_url=https://hooks.slack.com/services/....../...../.....
