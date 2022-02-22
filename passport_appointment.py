@@ -1,18 +1,23 @@
+from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 import time
-import winsound
 import requests
 import os
 import json
 
 web_path="https://pastel.diplomatie.gouv.fr/rdvinternet/html-4.02.00/frameset/frameset.html?lcid=2&sgid=173&suid=2"
 
+display = Display(visible=0, size=(1920, 1080))
+display.start()
+
 options = webdriver.ChromeOptions() 
 # to supress the error messages/logs and hide the browser
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
-
+options.add_argument('--no-sandbox')
+options.add_argument('--disable-dev-shm-usage')
+options.add_argument('--disable-gpu')
 
 def log(msg):
     print(time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime()), ":", msg)
@@ -22,8 +27,6 @@ def log(msg):
     
 def alarm(msg):
     log("Alarm -- " + msg)
-    winsound.Beep(1000, 1000)
-    winsound.Beep(1500, 1000)
 
     try:
         slack_data = {'text': msg, 'username': "Passport apointment notifier", 'icon_emoji': ":bell:"}
@@ -36,8 +39,7 @@ def alarm(msg):
     except Exception as e:
         log("Couldn't send a slack notification because of " + str(e))
         
-driver = webdriver.Chrome(options=options, executable_path=r'./chromedriver.exe')
-driver.minimize_window()
+driver = webdriver.Chrome(options=options, executable_path=r'/usr/local/bin/chromedriver')
 
 alarm("Passport appointment checker is starting")
 
@@ -76,9 +78,7 @@ while (1):
         except NoAlertPresentException as e:
             alarm("No alert present, looks like appointments may be available : " + web_path)
                     
-        #driver.close()
         time.sleep(60)
 
     except Exception as e:
         alarm("Oops! " + str(e) + " occurred, trying again")
-        driver.close()
