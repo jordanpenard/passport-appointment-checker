@@ -3,6 +3,9 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 import time
 import winsound
+import requests
+import os
+import json
 
 web_path="https://pastel.diplomatie.gouv.fr/rdvinternet/html-4.02.00/frameset/frameset.html?lcid=2&sgid=173&suid=2"
 
@@ -17,9 +20,23 @@ def log(msg):
 def alarm(msg):
     log("Alarm -- " + msg)
     winsound.Beep(1000, 1000)
+    winsound.Beep(1500, 1000)
 
+    try:
+        slack_data = {'text': msg, 'username': "Passport apointment notifier", 'icon_emoji': ":bell:"}
+        response = requests.post(os.environ.get('webhook_url'), data=json.dumps(slack_data), headers={'Content-Type': 'application/json'})
+        if response.status_code != 200:
+            raise ValueError(
+                'Request to slack returned an error %s, the response is:\n%s'
+                % (response.status_code, response.text)
+            )
+    except Exception as e:
+        log("Couldn't send a slack notification because of " + str(e))
+        
 driver = webdriver.Chrome(options=options, executable_path=r'./chromedriver.exe')
 driver.minimize_window()
+
+alarm("Passport appointment checker is starting")
 
 while (1):
     try:
