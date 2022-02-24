@@ -22,5 +22,5 @@ pkg install xdpyinfo-1.3.2_3
 
 ## You can also setup a crontab as follow to make sure the script is still running (will send a notification on slack saying if the script is still running or not)
 ```
-echo "0 8 * * * `pwd`/cront_check.sh" >> /etc/crontab
+echo "0       8       *       *       *       root    `pwd`/cront_check.sh" >> /etc/crontab
 ```

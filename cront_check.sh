@@ -1,8 +1,8 @@
 #!/bin/sh
 
-. setup.sh
+. `dirname $0`/setup.sh
 
-ret=`ps | grep "python3.8 passport_appointment.py" | wc -l`
+ret=`ps -awx -l | grep "python3.8 passport_appointment.py" | wc -l`
 running=$(( $ret == 2 ))
 
 if [ "$running" -eq "1" ]; then
