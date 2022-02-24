@@ -80,7 +80,10 @@ while True:
         time.sleep(45)
 
     except Exception as e:
-        alarm("Oops! " + str(e) + " occurred, trying again")
+        if ("Message: no such element: Unable to locate element:" in str(e) and ("item2_0_0" in str(e) or "ccg" in str(e))):
+            log("Oops! " + str(e) + " occurred, trying again")
+        else:
+            alarm("Oops! " + str(e) + " occurred, trying again")
 
     driver.close()
     driver.quit()
