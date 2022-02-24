@@ -9,9 +9,6 @@ import json
 
 web_path="https://pastel.diplomatie.gouv.fr/rdvinternet/html-4.02.00/frameset/frameset.html?lcid=2&sgid=173&suid=2"
 
-display = Display(visible=0, size=(1920, 1080))
-display.start()
-
 options = webdriver.ChromeOptions() 
 # to supress the error messages/logs and hide the browser
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
@@ -39,13 +36,15 @@ def alarm(msg):
     except Exception as e:
         log("Couldn't send a slack notification because of " + str(e))
         
-driver = webdriver.Chrome(options=options, executable_path=r'/usr/local/bin/chromedriver')
-
 alarm("Passport appointment checker is starting")
 
-while (1):
+display = Display(visible=0, size=(1920, 1080))
+display.start()
+
+while True:
     try:
-        driver.delete_all_cookies()
+
+        driver = webdriver.Chrome(options=options, executable_path=r'/usr/local/bin/chromedriver')
         driver.get(web_path)
 
         time.sleep(5)
@@ -78,7 +77,10 @@ while (1):
         except NoAlertPresentException as e:
             alarm("No alert present, looks like appointments may be available : " + web_path)
                     
-        time.sleep(60)
+        time.sleep(45)
 
     except Exception as e:
         alarm("Oops! " + str(e) + " occurred, trying again")
+
+    driver.close()
+    driver.quit()
