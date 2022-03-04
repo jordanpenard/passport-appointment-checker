@@ -7,7 +7,8 @@ import requests
 import os
 import json
 
-web_path="https://pastel.diplomatie.gouv.fr/rdvinternet/html-4.02.00/frameset/frameset.html?lcid=2&sgid=173&suid=2"
+#web_path="https://pastel.diplomatie.gouv.fr/rdvinternet/html-4.02.00/frameset/frameset.html?lcid=2&sgid=173&suid=2"
+web_path="https://uk.ambafrance.org/INFORMATIONS-PRATIQUES"
 
 options = webdriver.ChromeOptions() 
 # to supress the error messages/logs and hide the browser
@@ -49,6 +50,12 @@ while True:
 
         time.sleep(5)
 
+        driver.find_element_by_xpath("/html/body/div[2]/main/div/div[2]/div/div[2]/div[2]/div[1]/h4/a").click()
+        driver.find_element_by_xpath("/html/body/div[2]/main/div/div[2]/div/div[2]/div[2]/div[1]/div/p[3]/a[1]").click()
+
+        time.sleep(5)
+
+        driver.switch_to.window(driver.window_handles[1])
         driver.switch_to.frame(driver.find_element_by_xpath('/html/frameset/frame[2]'))
         driver.switch_to.frame(driver.find_element_by_xpath('/html/frameset/frame[1]'))
 
@@ -68,7 +75,7 @@ while True:
         try:
             obj = driver.switch_to.alert
             msg=obj.text
-            if (msg != "Actuellement, tous les créneaux pour la démarche 'Dépôt de demande d'inscription, de passeport, de CNIS' sont occupés. Nous vous invitons à réitérer votre demande plus tard."):
+            if (msg != "Actuellement, tous les créneaux pour la démarche 'Demande de passeport et/ou de CNIS' sont occupés. Nous vous invitons à réitérer votre demande plus tard."):
                 alarm(msg)
             else:
                 log("Nothing yet")
