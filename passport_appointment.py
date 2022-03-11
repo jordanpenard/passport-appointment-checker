@@ -1,6 +1,7 @@
 from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.common.exceptions import NoAlertPresentException
 
 import time
 import requests
@@ -72,22 +73,22 @@ while True:
         time.sleep(5)
 
         # Expecting an Alert message if there's no appointments available
-        try:
-            obj = driver.switch_to.alert
-            msg=obj.text
-            if (msg != "Actuellement, tous les créneaux pour la démarche 'Demande de passeport et/ou de CNIS' sont occupés. Nous vous invitons à réitérer votre demande plus tard."):
-                alarm(msg)
-            else:
-                log("Nothing yet")
-            obj.accept()
+        obj = driver.switch_to.alert
+        msg=obj.text
+        if (msg != "Actuellement, tous les créneaux pour la démarche 'Demande de passeport et/ou de CNIS' sont occupés. Nous vous invitons à réitérer votre demande plus tard."):
+            alarm(msg)
+        else:
+            log("Nothing yet")
+        obj.accept()
 
-        except NoAlertPresentException as e:
-            alarm("No alert present, looks like appointments may be available : " + web_path)
-                    
         time.sleep(45)
 
+    except NoAlertPresentException:
+        alarm("No alert present, looks like appointments may be available : " + driver.current_url)
+        alarm(driver.find_element_by_xpath("/html/body/form/table/tbody/tr[3]/td/table[1]/tbody[2]/tr[2]/td/table/tbody/tr[2]/td[3]/div/table/tbody/tr[2]/td/div/table/tbody/tr/td").text)
+                    
     except Exception as e:
-        if ("Message: no such element: Unable to locate element:" in str(e) and ("item2_0_0" in str(e) or "ccg" in str(e))):
+        if ( ("Message: no such element: Unable to locate element:" in str(e) and ("item2_0_0" in str(e) or "ccg" in str(e))) or ("ERR_CONNECTION_REFUSED" in str(e))):
             log("Oops! " + str(e) + " occurred, trying again")
         else:
             alarm("Oops! " + str(e) + " occurred, trying again")
