@@ -85,8 +85,7 @@ while True:
 
     except NoAlertPresentException:
         alarm("No alert present, looks like appointments may be available : " + driver.current_url)
-        alarm(driver.find_element_by_xpath("/html/body/form/table/tbody/tr[3]/td/table[1]/tbody[2]/tr[2]/td/table/tbody/tr[2]/td[3]/div/table/tbody/tr[2]/td/div/table/tbody/tr/td").text)
-                    
+
     except Exception as e:
         if ( ("Message: no such element: Unable to locate element:" in str(e) and ("item2_0_0" in str(e) or "ccg" in str(e))) or ("ERR_CONNECTION_REFUSED" in str(e))):
             log("Oops! " + str(e) + " occurred, trying again")
